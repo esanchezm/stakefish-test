@@ -1,10 +1,10 @@
 import importlib.metadata
 from ipaddress import AddressValueError
-from pydantic import BaseModel, Field
-from pydantic.networks import IPv4Address
 from pathlib import Path
 
 import toml
+from pydantic import BaseModel, Field
+from pydantic.networks import IPv4Address
 
 
 def get_version(package_name: str):
@@ -21,8 +21,10 @@ def get_version(package_name: str):
 
         return "undefined"
 
+
 class QueryRequest(BaseModel):
     domain: str = Field(examples=["cloudflare.com"])
+
 
 class ValidateIPRequest(BaseModel):
     ip: str = Field(examples=["192.168.5.4"])
@@ -33,6 +35,7 @@ class ValidateIPRequest(BaseModel):
         except AddressValueError:
             return False
         return True
+
 
 class ValidateIPResponse(BaseModel):
     valid: bool

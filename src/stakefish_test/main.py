@@ -1,16 +1,17 @@
 import os
 import time
 
-import utils
 import routers
+import utils
 from fastapi import FastAPI
 
 VERSION = utils.get_version("stakefish-test")
 
+
 def get_application():
     app = FastAPI(
-        title='Interview challenge',
-        description='Implementation for the interview challenge',
+        title="Interview challenge",
+        description="Implementation for the interview challenge",
         debug="DEBUG" in os.environ,
         version=VERSION,
     )
@@ -20,7 +21,9 @@ def get_application():
 
     return app
 
+
 app = get_application()
+
 
 @app.get("/")
 def root():
@@ -32,6 +35,7 @@ def root():
         "date": time.time(),
         "kubernetes": "KUBERNETES_SERVICE_HOST" in os.environ,
     }
+
 
 @app.get("/health")
 def health():

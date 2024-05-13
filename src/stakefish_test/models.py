@@ -1,11 +1,12 @@
+from typing import Optional
+
+from dns import rdatatype, resolver
 from pydantic import BaseModel
-from typing import Dict, Optional
 from pydantic.networks import IPv4Address
-from dns import resolver, rdatatype
 
 
 class Address(BaseModel):
-    id: str
+    id: Optional[str]
     ip: IPv4Address
 
 
@@ -19,4 +20,7 @@ class Query(BaseModel):
     def resolve(self) -> list[Address]:
         answer = resolver.resolve(qname=self.domain, rdtype=rdatatype.A)
 
-        self.addresses = [Address(id="", ip=IPv4Address(ip_addr)) for ip_addr in answer.rrset.items.keys()]
+        self.addresses = [
+            Address(id="", ip=IPv4Address(ip_addr))
+            for ip_addr in answer.rrset.items.keys()
+        ]
