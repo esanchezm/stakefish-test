@@ -2,6 +2,7 @@ import os
 import time
 
 import utils
+import routers
 from fastapi import FastAPI
 
 VERSION = utils.get_version("stakefish-test")
@@ -14,6 +15,8 @@ def get_application():
         version=VERSION,
     )
 
+    app.include_router(routers.tools_router)
+    app.include_router(routers.history_router)
 
     return app
 
