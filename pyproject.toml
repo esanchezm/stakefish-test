@@ -1,0 +1,33 @@
+[project]
+name = "stakefish-test"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Esteban Sánchez", email = "esteban.sanchez@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.111.0",
+    "python-dotenv>=1.0.1",
+    "uvicorn>=0.29.0",
+    "toml>=0.10.2",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "None"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+uvicorn = "uvicorn main:app --port 3000 --reload --app-dir ./src/stakefish_test"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "black>=24.4.2",
+    "isort>=5.13.2",
+    "flake8>=7.0.0",
+    "pre-commit>=3.7.0",
+    "ruff>=0.4.4",
+]
