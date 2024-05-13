@@ -57,3 +57,23 @@ And it works:
   "kubernetes": false
 }
 ```
+
+There's also an easy `/health` endpoint that I'll leave it with a simple JSON `{"status": "up"}` response. I could probably add other checks like database connectivity in the future.
+
+## First application models and structure
+
+I'm reading the swagger files and I see a need a couple of models: `Address` and `Query`.
+
+> :warning: There's some discrepancy between the README file and the definitions in swagger. For example, the README file says the endpoints are versioned, but they're not in the OpenAPI definition. Considering you will review the code using automated tools, I assume the valid endpoints are **NOT** versioned. This will help me simplifying the code too, but I'm aware of versioning techniques using `prefix` for the route and OOP inheritance for the models and routes.
+
+Considering this is a quite small application I started with a simple solution and put all routes and models in the same file. I could use a more complex file structure using Python modules, one file per class... but I'll try to focus on a MVP for now. Refactoring a code like this shouldn't be too much effort on early stages, but time is limited too.
+
+I created a `models.py` with `Address` and `Query` classes using `pydantic` to handle the properties. I needed to validate IP Adresses and `pydantic` has `IPv4Address` fields, which is great for this. `Query` objects have a `list[Address]` in the `addresses` field. Quite simple structure for now.
+
+## Let's start with the routes
+
+Okay, let's start with some routers. Again, I'll try to keep it simple for now and put all routers in the same file. I basically see two routers: `/tools` and  `/history`, not sure if that's enough to create two different classes but I'll do that to create some code structure.
+
+Using the models I created some methods to `resolve()` a `Query` or to verify if a `ValidateIPRequest` is good or nod using `is_valid()`. This way the logic is in the model and we humblely follow SOLID principles.
+
+With these I could write basic code to at least provide some endpoints to play around even if they are dummy tests.
