@@ -28,3 +28,32 @@ pdm add -dG dev pre-commit pytest black isort flake8
 With pre-commit I can create a very basic hooks to manage code consistency. Check `.pre-commit-config.yaml` file for more.
 
 Let's make our initial commit! 🌟
+
+## First endpoint `/`
+
+This is a good starting point. All I need is the basic FastAPI application with a GET route to `/`. There are 2 basic aspects here:
+
+1. getting the app version
+
+By using `metadata` package or reading the `pyproject.toml` file. I created a function `get_version()` to handle it.
+
+2. and if it's running in k8s or not.
+
+There are many ways that could be complex, but maybe checking for some env variables is more than enough. So I did it with `KUBERNETES_SERVICE_HOST`
+
+To test it and spin the development environment, I've created a PDM script and it can be launched with:
+
+```bash
+pdm uvicorn
+```
+
+And it works:
+
+```bash
+❯ curl localhost:3000 -s |jq
+{
+  "version": "0.1.0",
+  "date": 1715591667.0477376,
+  "kubernetes": false
+}
+```
