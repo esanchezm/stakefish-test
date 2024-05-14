@@ -87,3 +87,15 @@ If I want to implement the `/history`, I need to start thinking about persistenc
 At this moment and if I want to use a database, I think I need to start using docker to help me developing I'll write a Docker and docker-compose
 
 As for the Dockerfile, I've created a multistaging image and based on [PDM](https://pdm-project.org/latest/usage/advanced/#use-pdm-in-a-multi-stage-dockerfile) documentation. I'm choosing `python:3.12-slim-bookworm` to create a small to have the lastest Python version with bugfixes and quite a small image.
+
+### SQLModel and defining persistence
+
+FastAPI works really well with [SQLModel](https://sqlmodel.tiangolo.com/) and it works great (with small changes) with what I've done. Honestly this is all new to me, so I'm trying to make it work...
+
+I wrote a `database.py` to define the db engine and sessions and also a `config.py` to handle the connection settings using `pydantic_settings` that allows to read settings using environment variables or `.env` files.
+
+Of course, I needed new libraries:
+
+```bash
+pdm add sqlmodel pydantic-settings "psycopg[binary]"
+```

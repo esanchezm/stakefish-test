@@ -11,6 +11,9 @@ dependencies = [
     "uvicorn>=0.29.0",
     "toml>=0.10.2",
     "dnspython>=2.6.1",
+    "sqlmodel>=0.0.18",
+    "pydantic-settings>=2.2.1",
+    "psycopg[binary]>=3.1.19",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -21,7 +24,7 @@ license = {text = "None"}
 distribution = false
 
 [tool.pdm.scripts]
-uvicorn = "uvicorn main:app --port 3000 --reload --app-dir ./src/stakefish_test"
+uvicorn = "uvicorn stakefish_test.main:app --port 3000 --reload --app-dir ./src"
 
 [tool.pdm.dev-dependencies]
 dev = [
