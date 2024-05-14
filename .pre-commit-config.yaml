@@ -13,7 +13,7 @@ repos:
         name: black
         stages: [commit]
         types: [python]
-        entry: pdm run black .
+        entry: pdm run black . -t py312 --extend-exclude /data/
         language: system
         pass_filenames: false
         always_run: true
@@ -21,7 +21,7 @@ repos:
         name: ruff
         stages: [commit]
         types: [python]
-        entry: pdm run ruff check .
+        entry: pdm run ruff check .  --fix
         language: system
         pass_filenames: false
         always_run: true
