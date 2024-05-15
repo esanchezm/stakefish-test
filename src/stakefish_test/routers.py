@@ -11,19 +11,18 @@ tools_router = APIRouter(
 
 
 @tools_router.post("/lookup")
-async def lookup_domain(queryRequest: QueryRequest, request: Request) -> Query:
+async def lookup_domain(queryRequest: QueryRequest, request: Request, db: Session = Depends(get_session)) -> Query:
     """
     Lookup domain and return all IPv4 addresses
     """
     query = Query(
-        id="1",
         addresses=[],
         client_ip=request.client.host,
-        created_at=int(time.time()),
         domain=queryRequest.domain,
     )
 
     query.resolve()
+    query = create_query(query, db)
 
     return query
 
