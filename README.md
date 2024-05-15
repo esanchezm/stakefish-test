@@ -99,3 +99,29 @@ Of course, I needed new libraries:
 ```bash
 pdm add sqlmodel pydantic-settings "psycopg[binary]"
 ```
+
+### Changes to models
+
+I was using `BaseModel` from `pydantic` to define the models, and to persist them to a database using SQLModel I need to use `SQLModel` base class instead. Fields can be defined the same way and using `Field()` I can specify database properties such as primary keys, nullables or default values.
+
+I wasn't sure if `Address` should be persisted, due to its nature of pure data, but since I already had a model, I decided to do it. The relationship is 1-N for code simplicity, though this should have been N-M.
+
+### Changes to routers
+
+With that in plase, all I had to do is create a session in the database and save the objects within a transaction. To follow SQLModel and FastAPI good practices, I'll create a `crud.py` file with the model operations, like `create_query()` and `get_queries_history()`. Doing so the db session can be injected as a dependency from the controllers.
+
+In order to have proper responses too, it's a good practice to define a better class structure for the `Address` and `Query` classes, so I created `*Base` and `*Output` classes as well. This could be a point where refactoring the models into a better file structure should be considered...
+
+### Manual testing
+
+With all of that, it's time to make some manual tests and remember to test with basic errors (malformed request, unknown domains...) to catch some exceptions I may have forgotten. Looks like everything works and I can see data being stored.
+
+However, when I get the `/history` endpoint, I'm getting a validation error. Apparently, SQLModel stores IPv4 addresses with the netmask, but that's not a valid IPv4 address...
+
+```
+fastapi.exceptions.ResponseValidationError: 2 validation errors:
+  {'type': 'ip_v4_address', 'loc': ('response', 0, 'client_ip'), 'msg': 'Input is not a valid IPv4 address', 'input': '127.0.0.1/32'}
+  {'type': 'ip_v4_address', 'loc': ('response', 0, 'addresses', 0, 'ip'), 'msg': 'Input is not a valid IPv4 address', 'input': '142.250.184.174/32'}
+```
+
+I found a workaround and I saw I can fix it by creating a `IPv4AddresssType` for SQLAlchemy.
