@@ -125,3 +125,32 @@ fastapi.exceptions.ResponseValidationError: 2 validation errors:
 ```
 
 I found a workaround and I saw I can fix it by creating a `IPv4AddresssType` for SQLAlchemy.
+
+
+## Improvements and missing things
+
+With the basic implementation now, it's time to add other requirements like logging and metrics
+
+### Metrics using prometheus
+
+For this I'll use [Prometheus FastAPI instrumentator](https://github.com/trallnag/prometheus-fastapi-instrumentator)
+
+```bash
+pdm add prometheus-fastapi-instrumentator
+```
+
+Adding it to the application gives me basic HTTP counters, response time histogram buckets and Python metrics. That's more than enough but I believe in custom metrics, so I added a counter metric for the number of queries stored in the database. For that I created a `count_queries_per_domain()` and a `queries_total()` metric generator under a new `metrics.py` file.
+
+After some coding, I can get these metrics:
+
+```
+# HELP queries_total Number of total queries per domain.
+# TYPE queries_total gauge
+queries_total{domain="goo.com"} 1.0
+queries_total{domain="archive.org"} 1.0
+queries_total{domain="stake.fish"} 1.0
+queries_total{domain="facebook.com"} 1.0
+queries_total{domain="google.com"} 2.0
+```
+
+I could add more custom metrics like a counter per `client_ip`, IP addresses per domain...
