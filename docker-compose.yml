@@ -2,7 +2,7 @@ services:
   app:
     build: .
     env_file:
-      - .env
+      - .env-development
     ports:
       - 3000:3000
     depends_on:
@@ -11,7 +11,7 @@ services:
   db:
     image: postgres:15
     env_file:
-      - .env
+      - .env-development
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
