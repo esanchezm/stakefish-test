@@ -8,7 +8,6 @@ authors = [
 dependencies = [
     "fastapi>=0.111.0",
     "python-dotenv>=1.0.1",
-    "uvicorn>=0.29.0",
     "toml>=0.10.2",
     "dnspython>=2.6.1",
     "sqlmodel>=0.0.18",
@@ -25,7 +24,7 @@ license = {text = "None"}
 distribution = false
 
 [tool.pdm.scripts]
-uvicorn = "uvicorn stakefish_test.main:app --port 3000 --app-dir ./src"
+uvicorn = "uvicorn stakefish_test.main:app --port 3000 --no-access-log --app-dir ./src"
 
 [tool.pdm.dev-dependencies]
 dev = [
@@ -35,4 +34,5 @@ dev = [
     "flake8>=7.0.0",
     "pre-commit>=3.7.0",
     "ruff>=0.4.4",
+    "uvicorn>=0.29.0",
 ]

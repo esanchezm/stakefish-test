@@ -9,7 +9,7 @@ COPY pyproject.toml pdm.lock /code/
 COPY src/ /code/src
 
 WORKDIR /code
-RUN pdm install --check --no-editable
+RUN pdm install --prod --check --no-editable
 
 FROM python:$PYTHON_BASE
 
