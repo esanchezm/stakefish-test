@@ -5,23 +5,28 @@ import sqlalchemy
 from dns import exception, rdatatype, resolver
 from pydantic.networks import IPv4Address
 from sqlmodel import Field, Relationship, SQLModel
+
 from .utils import IPv4AddresssType
+
 
 class AddressBase(SQLModel):
     ip: IPv4Address = Field(nullable=False, sa_type=IPv4AddresssType)
 
+
 class Address(AddressBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     query_id: int | None = Field(default=None, foreign_key="query.id")
-    query: Optional["Query"] = Relationship(back_populates="addresses") # type: ignore
+    query: Optional["Query"] = Relationship(back_populates="addresses")  # type: ignore
 
 
 class AddressOutput(AddressBase):
     pass
 
+
 class QueryBase(SQLModel):
     client_ip: IPv4Address = Field(sa_type=IPv4AddresssType)
     domain: str
+
 
 class Query(QueryBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -42,6 +47,7 @@ class Query(QueryBase, table=True):
         self.addresses = [
             Address(ip=IPv4Address(ip_addr)) for ip_addr in answer.rrset.items.keys()
         ]
+
 
 class QueryOutput(QueryBase):
     id: int

@@ -1,8 +1,10 @@
-import time
+from fastapi import APIRouter, Depends, Request, status
+from sqlmodel import Session
 
-from fastapi import APIRouter, Request, status
-from models import Query
-from utils import QueryRequest, ValidateIPRequest, ValidateIPResponse
+from .crud import create_query, get_queries_history
+from .database import get_session
+from .models import Query, QueryOutput
+from .utils import QueryRequest, ValidateIPRequest, ValidateIPResponse
 
 tools_router = APIRouter(
     prefix="/tools",
@@ -11,7 +13,9 @@ tools_router = APIRouter(
 
 
 @tools_router.post("/lookup")
-async def lookup_domain(queryRequest: QueryRequest, request: Request, db: Session = Depends(get_session)) -> Query:
+async def lookup_domain(
+    queryRequest: QueryRequest, request: Request, db: Session = Depends(get_session)
+) -> Query:
     """
     Lookup domain and return all IPv4 addresses
     """
@@ -44,9 +48,9 @@ history_router = APIRouter(
 )
 
 
-@history_router.get("/history", response_model=None)
-def queries_history() -> None:
+@history_router.get("/history", response_model=list[QueryOutput])
+def queries_history(db: Session = Depends(get_session)) -> list[QueryOutput]:
     """
     List queries
     """
-    pass
+    return get_queries_history(db=db)
