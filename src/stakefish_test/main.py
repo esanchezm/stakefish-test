@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from . import database, metrics, routers, utils
+from .middleware import JSONAccessLogMiddleware
 
 VERSION = utils.get_version("stakefish-test")
 
@@ -37,6 +38,7 @@ def get_application():
 
 
 app = get_application()
+app.add_middleware(JSONAccessLogMiddleware)
 
 
 @app.get("/")
