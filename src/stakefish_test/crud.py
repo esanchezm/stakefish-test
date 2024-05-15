@@ -1,4 +1,5 @@
 from fastapi import Depends
+from sqlalchemy import func
 from sqlmodel import Session, select
 
 from .database import get_session
@@ -21,3 +22,12 @@ def get_queries_history(limit: int = 10, db: Session = Depends(get_session)):
     ).all()
 
     return queries
+
+
+def count_queries_per_domain(db: Session):
+    """
+    Get count of queries per domain
+    """
+    return db.exec(
+        select(Query.domain, func.count(Query.domain)).group_by(Query.domain)
+    ).all()
