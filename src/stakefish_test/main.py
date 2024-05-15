@@ -3,15 +3,17 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
-from . import database, routers, utils
+from . import database, metrics, routers, utils
 
 VERSION = utils.get_version("stakefish-test")
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(application: FastAPI):
     database.create_db_and_tables()
+    application.instrumentator.expose(application)
     yield
     database.engine.dispose()
 
@@ -24,6 +26,9 @@ def get_application():
         version=VERSION,
         lifespan=lifespan,
     )
+
+    app.instrumentator = Instrumentator().instrument(app)
+    app.instrumentator.add(metrics.queries_total())
 
     app.include_router(routers.tools_router)
     app.include_router(routers.history_router)
