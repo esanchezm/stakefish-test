@@ -5,6 +5,7 @@ from pathlib import Path
 import toml
 from pydantic import BaseModel, Field
 from pydantic.networks import IPv4Address
+from sqlmodel import AutoString
 
 
 def get_version(package_name: str):
@@ -39,3 +40,25 @@ class ValidateIPRequest(BaseModel):
 
 class ValidateIPResponse(BaseModel):
     valid: bool
+
+
+class IPv4AddresssType(AutoString):
+    def process_bind_param(self, value, dialect) -> str | None:
+        if value is None:
+            return None
+
+        if isinstance(value, str):
+            # Test if value is a valid IP address to avoid process result value failling
+            try:
+                IPv4Address(value)
+            except ValueError as e:
+                raise ValueError(f"{value} is not a valid IP address") from e
+
+        # We don't want to store netmask
+        return str(value).split("/")[0]
+
+    def process_result_value(self, value, dialect) -> IPv4Address | None:
+        if value is None:
+            return None
+
+        return IPv4Address(value)
