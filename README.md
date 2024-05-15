@@ -154,3 +154,16 @@ queries_total{domain="google.com"} 2.0
 ```
 
 I could add more custom metrics like a counter per `client_ip`, IP addresses per domain...
+
+### Access log
+
+Another requirement is to have an access log. FastAPI has it out-of-the-box, but I think it's better to have it in a JSON format. Well, I was looking at ways to do it and all I could find were a lot complexity and [discussions](https://github.com/tiangolo/fastapi/discussions/7457) in Github. However, after some testing, I found [this repository](https://github.com/sheshbabu/fastapi-structured-json-logging-demo) in Github with a very good example.
+
+It basically consists of having a middleware (defined in `middleware.py`) that captures request and response to log it using a specific `JSONFormatter` handler.
+
+```
+{"message": "Incoming request", "req": {"method": "GET", "url": "http://localhost:3000/health", "client": "127.0.0.1", "user-agent": "curl/8.2.1"}, "res": {"status_code": 200}}
+{"message": "Incoming request", "req": {"method": "GET", "url": "http://localhost:3000/history", "client": "127.0.0.1", "user-agent": "curl/8.2.1"}, "res": {"status_code": 200}}
+{"message": "Incoming request", "req": {"method": "POST", "url": "http://localhost:3000/tools/lookup", "client": "127.0.0.1", "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0"}, "res": {"status_code": 200}}
+
+```
