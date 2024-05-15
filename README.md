@@ -176,10 +176,18 @@ Well, I think this finishes everything regarding functionality and requirements.
 
 I wrote some basic tests, just to have something for the pipelines.
 
-> :warning: I don't plan on writing a extensive test suite. Please, consider this is an exercise and I just want to have something, not everything covered.
+> :warning: I don't plan on writing a extensive testsuite. Please, consider this is an exercise and I just want to have something, not everything covered.
 
 I started with a basic test for `/health` endpoint and I got a deprecation warning of a feature I used, so that's actually quite good because now my code is more modern :tada:
 
 I created some tests also for the `/tools/validate` endpoint, which is pretty simple.
 
 At this point I'm thinking if I should add integration tests using a database. I think I should, but honestly this is getting bigger and bigger and taking a lot of time. I'm sorry about this.
+
+### CI/CD using github actions
+
+I created a simple `test-and-build.yaml` application to run the testsuite and to build the docker image. It's a 2 jobs workflow since I wanted to have everything in the same file. Again, for development simplicity and also to avoid building and publishing Docker images which tests are failing.
+
+The docker image is published in the github artifact registry and signed usign cosign for verification.
+
+I found on the first runs that I was missing some environment variables and also that it would affect me to create a development environment, so I decided to create a `.env-development` file with dummy credentials and also use them in the docker compose file.
