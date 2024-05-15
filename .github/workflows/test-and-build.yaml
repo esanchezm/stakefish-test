@@ -20,6 +20,12 @@ jobs:
       contents: read
 
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_PASSWORD: stakefish
+      POSTGRES_USER: stakefish
+      POSTGRES_DB: stakefish
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
 
     steps:
     - uses: actions/checkout@v4
