@@ -167,3 +167,19 @@ It basically consists of having a middleware (defined in `middleware.py`) that c
 {"message": "Incoming request", "req": {"method": "POST", "url": "http://localhost:3000/tools/lookup", "client": "127.0.0.1", "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0"}, "res": {"status_code": 200}}
 
 ```
+
+### End of the development
+
+Well, I think this finishes everything regarding functionality and requirements. Next part is the Devops exercise, where I need to create some CI/CD pipelines. But I have no tests! This is a good moment :smile:
+
+## Creating some tests
+
+I wrote some basic tests, just to have something for the pipelines.
+
+> :warning: I don't plan on writing a extensive test suite. Please, consider this is an exercise and I just want to have something, not everything covered.
+
+I started with a basic test for `/health` endpoint and I got a deprecation warning of a feature I used, so that's actually quite good because now my code is more modern :tada:
+
+I created some tests also for the `/tools/validate` endpoint, which is pretty simple.
+
+At this point I'm thinking if I should add integration tests using a database. I think I should, but honestly this is getting bigger and bigger and taking a lot of time. I'm sorry about this.
