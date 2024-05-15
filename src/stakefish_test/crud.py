@@ -16,7 +16,7 @@ def create_query(query: Query, db: Session = Depends(get_session)):
     return query_to_db
 
 
-def get_queries_history(limit: int = 10, db: Session = Depends(get_session)):
+def get_queries_history(limit: int = 20, db: Session = Depends(get_session)):
     queries = db.exec(
         select(Query).order_by(Query.created_at.desc()).limit(limit)
     ).all()
