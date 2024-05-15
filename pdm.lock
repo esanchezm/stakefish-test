@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:81d9b9023d7efc1b7f0107fbda5416637f28c05212f09d382b7c6daa33e7f5b9"
+content_hash = "sha256:a3333e18557905e93582b0392f81e60102b2ff7b5990e6f27a436c8ec08c01ab"
 
 [[package]]
 name = "annotated-types"
@@ -505,6 +505,32 @@ dependencies = [
 files = [
     {file = "pre_commit-3.7.0-py2.py3-none-any.whl", hash = "sha256:5eae9e10c2b5ac51577c3452ec0a490455c45a0533f7960f993a0d01e59decab"},
     {file = "pre_commit-3.7.0.tar.gz", hash = "sha256:e209d61b8acdcf742404408531f0c37d49d2c734fd7cff2d6076083d191cb060"},
+]
+
+[[package]]
+name = "prometheus-client"
+version = "0.20.0"
+requires_python = ">=3.8"
+summary = "Python client for the Prometheus monitoring system."
+groups = ["default"]
+files = [
+    {file = "prometheus_client-0.20.0-py3-none-any.whl", hash = "sha256:cde524a85bce83ca359cc837f28b8c0db5cac7aa653a588fd7e84ba061c329e7"},
+    {file = "prometheus_client-0.20.0.tar.gz", hash = "sha256:287629d00b147a32dcb2be0b9df905da599b2d82f80377083ec8463309a4bb89"},
+]
+
+[[package]]
+name = "prometheus-fastapi-instrumentator"
+version = "7.0.0"
+requires_python = ">=3.8.1,<4.0.0"
+summary = "Instrument your FastAPI with Prometheus metrics."
+groups = ["default"]
+dependencies = [
+    "prometheus-client<1.0.0,>=0.8.0",
+    "starlette<1.0.0,>=0.30.0",
+]
+files = [
+    {file = "prometheus_fastapi_instrumentator-7.0.0-py3-none-any.whl", hash = "sha256:96030c43c776ee938a3dae58485ec24caed7e05bfc60fe067161e0d5b5757052"},
+    {file = "prometheus_fastapi_instrumentator-7.0.0.tar.gz", hash = "sha256:5ba67c9212719f244ad7942d75ded80693b26331ee5dfc1e7571e4794a9ccbed"},
 ]
 
 [[package]]
