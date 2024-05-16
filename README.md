@@ -354,3 +354,14 @@ spec:
             name: node-sa
 
 ```
+
+### Publish helm package
+
+Since I'm already publishing the Docker image to ghcr.io, I think I could use the [chart-releaser-action](https://github.com/helm/chart-releaser-action) to publish it using Github pages. I created a github action to do that.
+
+```bash
+helm repo add stakefish-test https://esanchezm.github.io/stakefish-test/
+helm repo update
+```
+
+> :info: The repo is private and that doesn't work as you need to use Github credentials to access the page
