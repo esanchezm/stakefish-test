@@ -365,3 +365,23 @@ helm repo update
 ```
 
 > :info: The repo is private and that doesn't work as you need to use Github credentials to access the page
+
+## Missing things
+
+Here's a list of things to consider but I didn't do due to lack of time
+
+- Refactor the code to put models in a subdirectory
+- Document Helm chart
+- Added tests for Helm chart and kubeval to verify the output against different k8s APIs
+- Publish it to Artifact Hub or OCI compatible artifact repository
+
+## Wrapping up and personal notes
+
+:pray: Thanks for the opportunity.
+
+Honestly, this was a big test, creating a API with just so little information was a bit challenging. And well, I think this should be a more DevOps oriented test since the only things I've done are a couple of Github actions and a Helm chart.
+
+Anyway, I hope this gives you enough information to understand how I work and what I'm capable of. There may have been some mistakes, but I think this is a test for you to see my skills.
+
+Talk to you soon!
+Esteban
