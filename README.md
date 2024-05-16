@@ -196,3 +196,161 @@ I created a simple `test-and-build.yaml` application to run the test suite and t
 The Docker image is published in the GitHub artifact registry and signed using cosign for verification.
 
 I found on the first runs that I was missing some environment variables and also that it would affect me to create a development environment, so I decided to create a `.env-development` file with dummy credentials and also use them in the Docker compose file.
+
+### Helm chart
+
+I started by running `helm create stakefish-test` that will help me with the basic structure of an application, quite enough that I only changed the values to point to the image I deployed and tweak it.
+
+I deleted all unneeded fields from the `values.yaml` file so only the changes I made are there. I disabled `Ingress`, `ServiceAccount` and other things.
+
+> :info: Instead of storing credentials using k8s `Secret`, we should use a external secret provider like [External Secrets](https://external-secrets.io/latest/), so we could store them securely in the cloud provider Secret Manager. To being able to read them, we should limit the nodes IAM role to read them or, even better, create a specific service account bound to an IAM role to access only the application secrets.
+
+The pods will require `imagePullSecrets` so I'm just referencing to a Secret that should be created and managed using External Secrets. I added `ExternalSecret` and `SecretStore` HELM templates just to give an example of it. Values are dummy and needs further resource definitions.
+
+The complexity and security implications could go further, and I just highlighted some details and things to do secure systems. I'm not implementing everything here because there's no specifications about it. What I've done is a basic example that renders like this:
+
+```yaml
+---
+# Source: stakefish-test/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: stakefish-test
+  name: stakefish-test
+spec:
+  finalizers:
+  - kubernetes
+---
+# Source: stakefish-test/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-stakefish-test
+  labels:
+    helm.sh/chart: stakefish-test-0.1.0
+    app.kubernetes.io/name: stakefish-test
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: stakefish-test
+    app.kubernetes.io/instance: release-name
+---
+# Source: stakefish-test/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-stakefish-test
+  labels:
+    helm.sh/chart: stakefish-test-0.1.0
+    app.kubernetes.io/name: stakefish-test
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stakefish-test
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: stakefish-test
+        app.kubernetes.io/instance: release-name
+    spec:
+      imagePullSecrets:
+        - name: pull-secrets
+      securityContext:
+        {}
+      containers:
+        - name: stakefish-test
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "ghcr.io/esanchezm/stakefish-test:latest"
+          imagePullPolicy: Allways
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+---
+# Source: stakefish-test/templates/externalsecret.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: application-secrets
+  namespace: stakefish-test
+spec:
+  dataFrom:
+  - extract:
+      key: application-secrets
+  refreshInterval: 15m
+  secretStoreRef:
+    kind: SecretStore
+    name: stakefish-secret-store
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    name: application-secrets
+---
+# Source: stakefish-test/templates/externalsecret.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: pull-secrets
+  namespace: stakefish-test
+spec:
+  dataFrom:
+  - extract:
+      key: pull-secrets
+  refreshInterval: 15m
+  secretStoreRef:
+    kind: SecretStore
+    name: stakefish-secret-store
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    name: pull-secrets
+---
+# Source: stakefish-test/templates/secretstore.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name:
+  namespace: stakefish-test
+spec:
+  provider:
+    gcpsm:
+      auth:
+        workloadIdentity:
+          serviceAccountRef:
+            name: node-sa
+
+```
