@@ -5,7 +5,7 @@ Hello 👋, this is the code I wrote for the take-home test for Stakefish. If yo
 This README file is important because I try to express my way of thinking and how I manage tasks. If you only focus on evaluating my code, you may get a wrong idea about me. The work I write may not be perfect, lacking types, exception handling, and many other things. Also, the object abstraction could be improved and different. I know how to do all of these, but I focused on getting the result. We could discuss these things if you want to review my test with me 🧑🏻‍💻
 
 
-## Kicking off 🦵
+## 🦵 Kicking off
 
 Normally, my language of choice for writing APIs and tools is Python. I'm learning Go and have already written some code that's publicly available. However, I still don't feel knowledgeable enough to write an API, and it would probably take too long to achieve something. For that reason, I'll do the coding exercise with Python.
 
@@ -31,7 +31,7 @@ With pre-commit, I can create very basic hooks to manage code consistency. Check
 
 Let's make our initial commit! 🌟
 
-## First endpoint `/` 1️⃣
+## 1️⃣ First endpoint `/`
 
 This is a good starting point. All I need is the basic FastAPI application with a GET route to `/`. There are two basic aspects here:
 
@@ -62,7 +62,7 @@ And it works:
 
 There's also an easy `/health` endpoint that I'll leave with a simple JSON `{"status": "up"}` response. I could probably add other checks like database connectivity in the future.
 
-## First application models and structure 🏗️
+## 🏗️ First application models and structure
 
 I'm reading the Swagger files and I see a need for a couple of models: `Address` and `Query`.
 
@@ -72,7 +72,7 @@ Considering this is quite a small application, I started with a simple solution 
 
 I created a `models.py` with `Address` and `Query` classes using `pydantic` to handle the properties. I needed to validate IP addresses, and `pydantic` has `IPv4Address` fields, which is great for this. Query objects have a `list[Address]` in the `addresses` field. Quite a simple structure for now.
 
-## Let's start with the routes 🔀
+## 🔀 Let's start with the routes
 
 Okay, let's start with some routers. Again, I'll try to keep it simple for now and put all routers in the same file. I basically see two routers: `/tools` and `/history`. Not sure if that's enough to create two different classes, but I'll do that to create some code structure.
 
@@ -80,7 +80,7 @@ Using the models, I created some methods to `resolve()` a `Query` or to verify i
 
 With these, I could write basic code to at least provide some endpoints to play around, even if they are dummy tests.
 
-## Persistence 💾
+## 💾 Persistence
 
 If I want to implement the `/history` endpoint, I need to start thinking about persistence. I think I'll go with PostgreSQL as storage because I prefer it to MySQL.
 
@@ -102,19 +102,19 @@ Of course, I needed new libraries:
 pdm add sqlmodel pydantic-settings "psycopg[binary]"
 ```
 
-### Changes to models 🦾
+### 🦾 Changes to models
 
 I was using `BaseModel` from `pydantic` to define the models, and to persist them to a database using SQLModel, I need to use the `SQLModel` base class instead. Fields can be defined the same way, and using `Field()`, I can specify database properties such as primary keys, nullables, or default values.
 
 I wasn't sure if `Address` should be persisted, due to its nature of pure data, but since I already had a model, I decided to do it. The relationship is 1-N for code simplicity, though this should have been N-M because some domains may share IP addresses.
 
-### Changes to routers 🦿
+### 🦿 Changes to routers
 
 With that in place, all I had to do was create a session in the database and save the objects within a transaction. To follow SQLModel and FastAPI good practices, I'll create a `crud.py` file with the model operations, like `create_query()` and `get_queries_history()`. Doing so, the db session can be injected as a dependency from the controllers.
 
 To have proper responses, it's a good practice to define a better class structure for the `Address` and `Query` classes, so I created `*Base` and `*Output` classes as well. This could be a point where refactoring the models into a better file structure should be considered...
 
-### Manual testing 🧪
+### 🧪 Manual testing
 
 With all of that, it's time to do some manual tests and remember to test with basic errors (malformed requests, unknown domains...) to catch some exceptions I may have forgotten. It looks like everything works and I can see data being stored.
 
@@ -129,7 +129,7 @@ fastapi.exceptions.ResponseValidationError: 2 validation errors:
 I found a workaround, and I saw I could fix it by creating an `IPv4AddressType` for SQLAlchemy to use it when storing and retrieving the database value.
 
 
-## Improvements and missing things ⏫
+## ⏫ Improvements and missing things
 
 With the basic implementation now, it's time to add other requirements like logging and metrics.
 
@@ -157,7 +157,7 @@ queries_total{domain="google.com"} 2.0
 
 I could add more custom metrics like a counter per `client_ip`, IP addresses per domain...
 
-### Access log 🛂
+### 🛂 Access log
 
 Another requirement is to have an access log. FastAPI has it out-of-the-box, but I think it's better to have it in a JSON format. Well, I was looking at ways to do it and all I could find were a lot of complexity and [discussions](https://github.com/tiangolo/fastapi/discussions/7457) on GitHub. However, after some testing, I found this [repository](https://github.com/sheshbabu/fastapi-structured-json-logging-demo) on GitHub with a very good example.
 
@@ -171,11 +171,11 @@ It basically needs to define a middleware (created in `middleware.py`) that capt
 
 ```
 
-### End of the development 🔚
+### 🔚 End of the development
 
 Well, I think this finishes everything regarding functionality and requirements. The next part is the DevOps exercise, where I need to create some CI/CD pipelines. But I have no tests! This is a good moment :smile:
 
-## Creating some tests 🤖
+## 🤖 Creating some tests
 
 I wrote some basic tests, just to have something for the pipelines.
 
@@ -188,7 +188,7 @@ I created some tests also for the `/tools/validate` endpoint, which is pretty si
 
 At this point, I'm thinking if I should add integration tests using a database. I think I should, but honestly, this is getting bigger and bigger and taking a lot of time. I'm sorry about this.
 
-### CI/CD using github actions 🧑‍🏭
+### 🧑‍🏭 CI/CD using github actions
 
 I created a simple `test-and-build.yaml` application to run the test suite and to build the Docker image. It's a 2-job workflow since I wanted to have everything in the same file. Again, for development simplicity and also to avoid building and publishing Docker images whose tests are failing.
 
@@ -197,7 +197,7 @@ The Docker image is published in the GitHub artifact registry and signed using c
 
 I found on the first runs that I was missing some environment variables and also that it would affect me to create a development environment, so I decided to create a `.env-development` file with dummy credentials and also use them in the Docker compose file.
 
-### Helm chart 💹
+### 💹 Helm chart
 
 I started by running `helm create stakefish-test` that will help me with the basic structure of an application, quite enough that I only changed the values to point to the image I deployed and tweak it.
 
@@ -355,7 +355,7 @@ spec:
 
 ```
 
-### Publish helm package 🍡
+### 🍡 Publish helm package
 
 Since I'm already publishing the Docker image to ghcr.io, I think I could use the [chart-releaser-action](https://github.com/helm/chart-releaser-action) to publish it using Github pages. I created a github action to do that.
 
@@ -366,16 +366,22 @@ helm repo update
 
 > :info: The repo is private and that doesn't work as you need to use Github credentials to access the page
 
-## Missing things 🤔
+## 🤔 Missing things
 
-Here's a list of things to consider but I didn't do due to lack of time
+Here's a list of things to consider but I didn't do due to lack of time or complexity
 
-- Refactor the code to put models in a subdirectory
-- Document Helm chart
-- Added tests for Helm chart and kubeval to verify the output against different k8s APIs
+- Refactor the code to put models and routes in subdirectories
+- Document Helm chart values file
+- Added tests for Helm chart and use kubeval to verify the output against different k8s APIs
 - Publish it to Artifact Hub or OCI compatible artifact repository
+- Improve security by having some user authentication or 
+- Add a sidecar container with TLS endpoint
+- Adding more tests including persistence
+- Supporting database schema changes
+- Tests parallelization so they're faster
+- Added metrics to measure application timing (database operations histogram, response time, memory usage...)
 
-## Wrapping up and personal notes 😃
+## 😃 Wrapping up and personal notes
 
 :pray: Thanks for the opportunity.
 
