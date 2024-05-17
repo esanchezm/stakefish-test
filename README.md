@@ -390,4 +390,7 @@ Honestly, this was a big test, creating a API with just so little information wa
 Anyway, I hope this gives you enough information to understand how I work and what I'm capable of. There may have been some mistakes, but I think this is a test for you to see my skills.
 
 Talk to you soon!
+
 Esteban
+
+![](https://avatars.githubusercontent.com/u/219745)
