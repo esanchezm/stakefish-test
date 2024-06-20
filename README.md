@@ -1,3 +1,13 @@
+> PLEASE READ: This is a take-home exercise I completed for a Site Reliability Engineer (SRE) position at stake.fish. The process was an absolute disaster due to the lack of professionalism shown by the recruiter.
+>
+> I submitted the exercise one week after receiving it. However, despite following up multiple times, I received no response. It wasn't until I reached out to a colleague of the recruiter's that I was informed they would eventually review my submission, but my time slot had passed because I was supposed to return my solution within 4 days and they proceeded with other candidates. In any case, I knew for certain that **no one had accessed the repository yet**.
+>
+> A couple of weeks later, I was contacted for a second interview and was told they would review my solution. To my shock, they wanted to discuss my code but in that call they ended up showing me another candidate's solution instead. I shared my code again at that specific time and they started reviewing it. Rather than postponing the interview for a proper review of my work, they shifted the conversation to another topic, specifically how Ethereum works.  At that point, I was completely out of focus and asked to stop the interview, suggesting we could reschedule in a couple of weeks. They agreed and said mistakes happen...
+> 
+> However, the next communication I received was from the recruiter, stating they didn't want to continue the process because I had supposedly withdrawn during the call. 🤦
+>
+> I'm leaving this here because it could be valid for personal reasons, to show my coding skills to other recruiters of more serious company. This recruiter and company is totally not worth my time or effort. 👋 :fishsticks: 🐟
+
 # Stakefish take-home exercise by Esteban Sánchez
 
 Hello 👋, this is the code I wrote for the take-home test for Stakefish. If you're a reviewer, please let me start by saying thank you, as I had fun writing it. Please check the commits along with this README file to understand my way of thinking and approach.
